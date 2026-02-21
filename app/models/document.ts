@@ -46,7 +46,6 @@ export default class Document extends BaseModel {
   @column()
   declare content_markdown: string | null
 
-  @column()
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 
