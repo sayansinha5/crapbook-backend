@@ -13,6 +13,7 @@ import AuthController from '#controllers/auth_controller';
 import OnboardingController from '#controllers/onboarding_controller';
 import CustomerController from '#controllers/customer_controller';
 import DocumentController from '#controllers/document_controller';
+import GroupController from '#controllers/group_controller';
 
 // Root Route
 router.get('/', async () => {
@@ -47,4 +48,14 @@ router.group(() => {
   router.patch('/documents/:document_uuid', [DocumentController, 'update']).as('documents.update');
 
   router.delete('/documents/:document_uuid', [DocumentController, 'destroy']).as('documents.destroy');
+}).use(middleware.auth());
+
+// Groups Controller
+router.group(() => {
+  router.get('/groups', [GroupController, 'index']).as('groups.index');
+  router.get('/groups/recent', [GroupController, 'recent']).as('groups.recent');
+  router.get('/groups/:group_uuid', [GroupController, 'show']).as('groups.show');
+  router.post('/groups', [GroupController, 'store']).as('groups.store');
+  router.patch('/groups/:group_uuid', [GroupController, 'update']).as('groups.update');
+  router.delete('/groups/:group_uuid', [GroupController, 'destroy']).as('groups.destroy');
 }).use(middleware.auth());
