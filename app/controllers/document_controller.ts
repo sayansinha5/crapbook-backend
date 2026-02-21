@@ -5,9 +5,9 @@ import DocumentTransformer from '#transformers/document_transformer'
 import vine from '@vinejs/vine';
 
 export default class DocumentController {
-  async index({ response }: HttpContext) {
+  async index({ response, auth }: HttpContext) {
 
-    const documents = await Document.all();
+    const documents = await Document.query().where('user_id', auth.user!.id).orderBy('updated_at', 'desc');
 
     return response.json({
       status: 'success',
