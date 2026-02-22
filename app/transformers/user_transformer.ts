@@ -10,7 +10,6 @@ export default class UserTransformer {
 
       ...(user.role && {
         role: user.role.type,
-        role_description: user.role.description,
       }),
 
       username: user.username,
@@ -25,8 +24,6 @@ export default class UserTransformer {
       is_banned: user.is_banned,
 
       ...(user.role.type === 'customer' && {
-        is_farm_created: user.customer?.is_farm_created,
-
         customer: {
           id: user.customer?.uuid,
           first_name: user.customer?.first_name,

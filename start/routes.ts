@@ -14,6 +14,7 @@ import OnboardingController from '#controllers/onboarding_controller';
 import CustomerController from '#controllers/customer_controller';
 import DocumentController from '#controllers/document_controller';
 import GroupController from '#controllers/group_controller';
+import UserController from '#controllers/user_controller';
 
 // Root Route
 router.get('/', async () => {
@@ -35,6 +36,12 @@ router.get('/auth/me', [AuthController, 'me']).as('auth.me');
 // Onboarding Controller
 router.group(() => {
   router.post('/onboarding', [OnboardingController, 'store']).as('onboarding.store');
+}).use(middleware.auth());
+
+// User Profile
+router.group(() => {
+  router.get('/profile', [UserController, 'show']).as('profile.show');
+  router.patch('/profile', [UserController, 'update']).as('profile.update');
 }).use(middleware.auth());
 
 // Document Controller
