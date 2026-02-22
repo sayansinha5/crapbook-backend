@@ -51,6 +51,7 @@ router.group(() => {
   router.get('/documents/:document_uuid', [DocumentController, 'show']).as('documents.show');
 
   router.post('/documents', [DocumentController, 'store']).as('documents.store');
+  router.post('/documents/:document_uuid/content/image', [DocumentController, 'uploadContentImage']).as('documents.uploadContentImage');
 
   router.patch('/documents/:document_uuid', [DocumentController, 'update']).as('documents.update');
 

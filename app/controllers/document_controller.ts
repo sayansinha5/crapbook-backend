@@ -3,6 +3,7 @@ import type { HttpContext } from '@adonisjs/core/http'
 import Document from '#models/document'
 import DocumentTransformer from '#transformers/document_transformer'
 import vine from '@vinejs/vine';
+import DocumentContentFile from '#models/document_content_file';
 
 export default class DocumentController {
   async index({ response, auth }: HttpContext) {
@@ -116,6 +117,59 @@ export default class DocumentController {
       status: 'success',
       message: 'Document updated successfully',
       data: await DocumentTransformer.transform(document),
+    });
+  }
+
+  async uploadContentImage({ response, params, request }: HttpContext) {
+
+    const payload = request.all();
+
+    // return response.status(200).json({
+    //   status: 'success',
+    //   message: 'Content Image upload successful',
+    //   data: payload,
+    // });
+
+    const name = payload.name;
+    const real_name = payload.real_name;
+    const type = payload.content_image.type;
+    const extension = payload.content_image.sub_type;
+    const size = payload.content_image.size;
+
+    // Handle content image upload
+    const contentImage = request.file('content_image', { size: '4mb', extnames: ['jpg', 'jpeg', 'png', 'webp'] });
+
+    if (contentImage && contentImage.isValid) {
+      const contentImagePath = "/documents/" + params.document_uuid + "/content/" + contentImage.clientName!;
+      await contentImage.moveToDisk(contentImagePath);
+    } else {
+      return response.status(402).json({
+        status: 'error',
+        message: 'Content Image upload failed',
+      });
+    }
+
+    const document = await Document.query().where('uuid', params.document_uuid).first();
+
+    if (!document) {
+      return response.status(402).json({
+        status: 'error',
+        message: 'Error in image upload. Document not found!',
+      });
+    }
+
+    await DocumentContentFile.create({
+      document_id: document?.id,
+      name: name,
+      real_name: real_name,
+      type: type,
+      extension: extension,
+      size: size,
+    });
+
+    return response.status(200).json({
+      status: 'success',
+      message: 'Content Image upload successful',
     });
   }
 
