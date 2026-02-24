@@ -63,6 +63,7 @@ router.group(() => {
   router.get('/groups', [GroupController, 'index']).as('groups.index');
   router.get('/groups/recent', [GroupController, 'recent']).as('groups.recent');
   router.get('/groups/:group_uuid', [GroupController, 'show']).as('groups.show');
+  router.get('/groups/:group_uuid/documents', [GroupController, 'documents']).as('groups.documents');
 
   router.post('/groups', [GroupController, 'store']).as('groups.store');
 

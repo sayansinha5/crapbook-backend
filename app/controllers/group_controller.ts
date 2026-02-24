@@ -3,6 +3,8 @@ import type { HttpContext } from '@adonisjs/core/http'
 import vine from '@vinejs/vine';
 import Group from '#models/group';
 import GroupTransformer from '#transformers/group_transformer';
+import DocumentTransformer from '#transformers/document_transformer';
+import Document from '#models/document';
 
 export default class GroupController {
   async index({ response, auth }: HttpContext) {
@@ -21,6 +23,25 @@ export default class GroupController {
     return response.json({
       status: 'success',
       data: await GroupTransformer.collection(groups),
+    });
+  }
+
+  async documents({ response, params, auth }: HttpContext) {
+
+    const group = await Group.query().where('user_id', auth.user!.id).where('uuid', params.group_uuid).first();
+
+    if (!group) {
+      return response.status(404).json({
+        status: 'error',
+        message: 'Group not found',
+      });
+    }
+
+    const documents = await Document.query().where('user_id', auth.user!.id).where('group_id', group.id).orderBy('updated_at', 'desc');
+
+    return response.json({
+      status: 'success',
+      data: await DocumentTransformer.collection(documents),
     });
   }
 
