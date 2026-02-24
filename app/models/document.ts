@@ -3,6 +3,7 @@ import { BaseModel, column, beforeCreate, belongsTo } from '@adonisjs/lucid/orm'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 import User from './user.js'
 import Customer from './customer.js'
+import Group from './group.js'
 
 export default class Document extends BaseModel {
   @column({ isPrimary: true })
@@ -14,6 +15,11 @@ export default class Document extends BaseModel {
   static assignUuid(document: Document) {
     document.uuid = crypto.randomUUID()
   }
+
+  @column()
+  declare group_id: number | null
+  @belongsTo(() => Group, { foreignKey: 'group_id' })
+  declare group: BelongsTo<typeof Group>
 
   @column()
   declare user_id: number | null

@@ -4,6 +4,7 @@ import Document from '#models/document'
 import DocumentTransformer from '#transformers/document_transformer'
 import vine from '@vinejs/vine';
 import DocumentContentFile from '#models/document_content_file';
+import Group from '#models/group';
 
 export default class DocumentController {
   async index({ response, auth }: HttpContext) {
@@ -41,16 +42,43 @@ export default class DocumentController {
     });
   }
 
-  async store({ response, auth }: HttpContext) {
+  async store({ request,response, auth }: HttpContext) {
+    const { data } = request.all();
+
+    let rules = vine.object({
+      title: vine.string().optional().nullable(),
+      group_id: vine.string().optional().nullable(),
+    });
+
+    let state: any = {
+      title: data?.title,
+      group_uuid: data?.group_id || null,
+    };
+
+    await vine.validate({ schema: rules, data: state });
 
     const user = auth.user;
     await user?.load('customer');
 
+    let group = null;
+
+    if(data?.group_id) {
+      group = await Group.query().where('user_id', user!.id).where('uuid', state.group_uuid).first();
+
+      if (!group) {
+        return response.status(402).json({
+          status: 'error',
+          message: 'Group doesn\'t exist!',
+        });
+      }
+    }
+
     const document = await Document.create({
+      group_id: group?.id,
       user_id: user?.id,
       customer_id: user?.customer?.id,
       editor_type: 'block_editor',
-      title: 'Untitled',
+      title: state.title || 'Untitled',
     });
 
     return response.status(200).json({

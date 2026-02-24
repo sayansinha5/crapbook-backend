@@ -63,7 +63,10 @@ router.group(() => {
   router.get('/groups', [GroupController, 'index']).as('groups.index');
   router.get('/groups/recent', [GroupController, 'recent']).as('groups.recent');
   router.get('/groups/:group_uuid', [GroupController, 'show']).as('groups.show');
+
   router.post('/groups', [GroupController, 'store']).as('groups.store');
+
   router.patch('/groups/:group_uuid', [GroupController, 'update']).as('groups.update');
+
   router.delete('/groups/:group_uuid', [GroupController, 'destroy']).as('groups.destroy');
 }).use(middleware.auth());

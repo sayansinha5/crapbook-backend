@@ -6,6 +6,17 @@ export default class DocumentTransformer {
     return {
       id: document.uuid,
 
+      ...(document.group && {
+        group: {
+          id: document.group.uuid,
+          name: document.group.name,
+          description: document.group.description,
+          tags: document.group.tags,
+          created_at: document.group.createdAt,
+          updated_at: document.group.updatedAt,
+        },
+      }),
+
       ...(document.user && {
         user: {
           id: document.user.uuid,
