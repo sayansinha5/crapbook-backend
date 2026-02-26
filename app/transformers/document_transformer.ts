@@ -46,8 +46,6 @@ export default class DocumentTransformer {
         },
       }),
 
-      thumbnail: document.thumbnail,
-
       editor_type: document.editor_type,
       title: document.title,
       description: document.description,

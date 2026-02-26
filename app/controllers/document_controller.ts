@@ -179,7 +179,7 @@ export default class DocumentController {
     }
 
     if (data.content_json) {
-      state['content_json'] = data.content_json;
+      state['content_json'] = JSON.parse(data.content_json);
     }
 
     if (data.content_markdown) {
@@ -198,6 +198,7 @@ export default class DocumentController {
     await vine.validate({ schema: rules, data: state });
 
     state['content_json'] = JSON.stringify(state['content_json']);
+
     const document = await Document.query().where('uuid', params.document_uuid).first();
 
     if (!document) {
