@@ -179,7 +179,9 @@ export default class DocumentController {
     }
 
     if (data.content_json) {
-      state['content_json'] = JSON.parse(data.content_json);
+      state['content_json'] = typeof data.content_json === 'string'
+        ? JSON.parse(data.content_json)
+        : data.content_json;
     }
 
     if (data.content_markdown) {
