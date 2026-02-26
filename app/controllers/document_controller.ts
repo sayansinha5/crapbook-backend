@@ -1,4 +1,7 @@
 import type { HttpContext } from '@adonisjs/core/http'
+import drive from '@adonisjs/drive/services/main'
+import sharp from 'sharp'
+import { createId } from '@paralleldrive/cuid2'
 
 import Document from '#models/document'
 import DocumentTransformer from '#transformers/document_transformer'
@@ -23,6 +26,71 @@ export default class DocumentController {
     return response.json({
       status: 'success',
       data: await DocumentTransformer.collection(documents),
+    });
+  }
+
+  async updateThumbnail({ response, params, request }: HttpContext) {
+
+    const document = await Document.query().where('uuid', params.document_uuid).first();
+
+    if (!document) {
+      return response.status(404).json({
+        status: 'error',
+        message: 'Document not found',
+      });
+    }
+
+    // Handle thumbnail update
+    const thumbnail = request.file('thumbnail', { size: '4mb', extnames: ['jpg', 'jpeg', 'png', 'webp'] });
+
+    if (!thumbnail || !thumbnail.isValid) {
+      return response.status(400).json({
+        status: 'error',
+        message: 'Thumbnail update failed',
+      });
+    }
+
+    if (!thumbnail.tmpPath) {
+      return response.status(400).json({
+        status: 'error',
+        message: 'Thumbnail file could not be processed',
+      });
+    }
+
+    try {
+      // Delete old thumbnail from disk if it exists
+      if (document.thumbnail) {
+        const oldThumbnailPath = `documents/${params.document_uuid}/thumbnail/${document.thumbnail}`
+        await drive.use().delete(oldThumbnailPath).catch(() => {})
+      }
+
+      // Resize image to 242x322 (width x height) using sharp
+      const resizedBuffer = await sharp(thumbnail.tmpPath)
+        .resize(512, 512, { fit: 'outside', position: 'top' })
+        .jpeg({ mozjpeg: true, quality: 85 })
+        .toBuffer();
+
+      // Generate random filename using cuid()
+      const fileName = `${createId()}.jpg`;
+      const thumbnailPath = `documents/${params.document_uuid}/thumbnail/${fileName}`;
+
+      // Save resized image to disk
+      await drive.use().put(thumbnailPath, resizedBuffer);
+
+      // Update document thumbnail column with the image path (used for URL construction)
+      document.thumbnail = fileName;
+      await document.save();
+
+    } catch (error) {
+      return response.status(500).json({
+        status: 'error',
+        message: 'Thumbnail processing failed',
+      });
+    }
+
+    return response.status(200).json({
+      status: 'success',
+      message: 'Thumbnail updated successfully',
     });
   }
 

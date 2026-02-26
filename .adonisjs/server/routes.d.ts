@@ -20,6 +20,7 @@ export type ScannedRoutes = {
     'documents.show': { paramsTuple: [ParamValue]; params: {'document_uuid': ParamValue} }
     'documents.store': { paramsTuple?: []; params?: {} }
     'documents.uploadContentImage': { paramsTuple: [ParamValue]; params: {'document_uuid': ParamValue} }
+    'documents.updateThumbnail': { paramsTuple: [ParamValue]; params: {'document_uuid': ParamValue} }
     'documents.update': { paramsTuple: [ParamValue]; params: {'document_uuid': ParamValue} }
     'documents.destroy': { paramsTuple: [ParamValue]; params: {'document_uuid': ParamValue} }
     'groups.index': { paramsTuple?: []; params?: {} }
@@ -68,6 +69,7 @@ export type ScannedRoutes = {
   }
   PATCH: {
     'profile.update': { paramsTuple?: []; params?: {} }
+    'documents.updateThumbnail': { paramsTuple: [ParamValue]; params: {'document_uuid': ParamValue} }
     'documents.update': { paramsTuple: [ParamValue]; params: {'document_uuid': ParamValue} }
     'groups.update': { paramsTuple: [ParamValue]; params: {'group_uuid': ParamValue} }
   }

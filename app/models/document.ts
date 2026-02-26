@@ -32,6 +32,9 @@ export default class Document extends BaseModel {
   declare customer: BelongsTo<typeof Customer>
 
   @column()
+  declare thumbnail: string | null
+
+  @column()
   declare editor_type: string | null
 
   @column()
