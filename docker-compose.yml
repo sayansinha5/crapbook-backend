@@ -1,10 +1,10 @@
 services:
-  backend-adonisjs:
+  crapbook_adonisjs:
     build: .
     command: node ace serve --hmr
     volumes:
-      - .:/backend-adonisjs
-      - backend-adonisjs_node_modules:/backend-adonisjs/node_modules
+      - .:/crapbook_adonisjs
+      - crapbook_adonisjs_node_modules:/crapbook_adonisjs/node_modules
     restart: unless-stopped
     env_file: .env
     ports:
@@ -15,7 +15,7 @@ services:
       mailpit:
         condition: service_started
     networks:
-      - backend-adonisjs
+      - crapbook_adonisjs
 
   mysql:
     image: mysql:8
@@ -30,7 +30,7 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
-      - backend-adonisjs
+      - crapbook_adonisjs
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
@@ -42,12 +42,12 @@ services:
     ports:
       - "8025:8025"
     networks:
-      - backend-adonisjs
+      - crapbook_adonisjs
 
 networks:
-  backend-adonisjs:
+  crapbook_adonisjs:
     driver: bridge
 
 volumes:
   mysql_data:
-  backend-adonisjs_node_modules:
+  crapbook_adonisjs_node_modules:

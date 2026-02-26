@@ -11,7 +11,6 @@ import router from '@adonisjs/core/services/router'
 
 import AuthController from '#controllers/auth_controller';
 import OnboardingController from '#controllers/onboarding_controller';
-import CustomerController from '#controllers/customer_controller';
 import DocumentController from '#controllers/document_controller';
 import GroupController from '#controllers/group_controller';
 import UserController from '#controllers/user_controller';

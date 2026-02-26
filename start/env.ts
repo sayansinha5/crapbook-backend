@@ -9,9 +9,14 @@
 |
 */
 
+import { fileURLToPath, pathToFileURL } from 'node:url'
+import { dirname, join } from 'node:path'
 import { Env } from '@adonisjs/core/env'
 
-export default await Env.create(new URL('../', import.meta.url), {
+/** App root as file URL (avoids "File URL host must be localhost or empty" on Linux/WSL) */
+const appRoot = pathToFileURL(join(dirname(fileURLToPath(import.meta.url)), '..'))
+
+export default await Env.create(appRoot, {
   NODE_ENV: Env.schema.enum(['development', 'production', 'test'] as const),
   PORT: Env.schema.number(),
   APP_KEY: Env.schema.string(),
