@@ -30,6 +30,7 @@ export type ScannedRoutes = {
     'groups.store': { paramsTuple?: []; params?: {} }
     'groups.update': { paramsTuple: [ParamValue]; params: {'group_uuid': ParamValue} }
     'groups.destroy': { paramsTuple: [ParamValue]; params: {'group_uuid': ParamValue} }
+    'ai.stream': { paramsTuple?: []; params?: {} }
   }
   GET: {
     'drive.fs.serve': { paramsTuple: [...ParamValue[]]; params: {'*': ParamValue[]} }
@@ -66,6 +67,7 @@ export type ScannedRoutes = {
     'documents.store': { paramsTuple?: []; params?: {} }
     'documents.uploadContentImage': { paramsTuple: [ParamValue]; params: {'document_uuid': ParamValue} }
     'groups.store': { paramsTuple?: []; params?: {} }
+    'ai.stream': { paramsTuple?: []; params?: {} }
   }
   PATCH: {
     'profile.update': { paramsTuple?: []; params?: {} }

@@ -4,6 +4,7 @@
  */
 
 export const controllers = {
+  Ai: () => import('#controllers/ai_controller'),
   Auth: () => import('#controllers/auth_controller'),
   Customer: () => import('#controllers/customer_controller'),
   Document: () => import('#controllers/document_controller'),
