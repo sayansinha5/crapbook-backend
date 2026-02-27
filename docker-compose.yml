@@ -44,6 +44,17 @@ services:
     networks:
       - crapbook_adonisjs
 
+  qdrant:
+    image: qdrant/qdrant
+    restart: unless-stopped
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    networks:
+      - crapbook_adonisjs
+    volumes:
+      - qdrant_data:/qdrant/storage
+
 networks:
   crapbook_adonisjs:
     driver: bridge
@@ -51,3 +62,4 @@ networks:
 volumes:
   mysql_data:
   crapbook_adonisjs_node_modules:
+  qdrant_data:
