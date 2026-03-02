@@ -75,5 +75,6 @@ router.group(() => {
 
 // AI Controller
 router.group(() => {
-  router.post('/ai/stream', [AiController, 'stream']).as('ai.stream');
+  router.post('/ai/ask', [AiController, 'ask']).as('ai.ask');
+  router.post('/ai/documents/:document_uuid', [AiController, 'streamDocumentResponses']).as('ai.streamDocumentResponses');
 }).use(middleware.auth());
