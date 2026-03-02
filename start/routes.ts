@@ -14,6 +14,7 @@ import OnboardingController from '#controllers/onboarding_controller';
 import DocumentController from '#controllers/document_controller';
 import GroupController from '#controllers/group_controller';
 import UserController from '#controllers/user_controller';
+import AiController from '#controllers/ai_controller';
 
 // Root Route
 router.get('/', async () => {
@@ -70,4 +71,10 @@ router.group(() => {
   router.patch('/groups/:group_uuid', [GroupController, 'update']).as('groups.update');
 
   router.delete('/groups/:group_uuid', [GroupController, 'destroy']).as('groups.destroy');
+}).use(middleware.auth());
+
+// AI Controller
+router.group(() => {
+  router.post('/ai/ask', [AiController, 'ask']).as('ai.ask');
+  router.post('/ai/documents/:document_uuid', [AiController, 'streamDocumentResponses']).as('ai.streamDocumentResponses');
 }).use(middleware.auth());
